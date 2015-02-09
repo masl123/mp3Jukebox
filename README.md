@@ -2,38 +2,4 @@
 look at http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2197337-mp3jukebox-mod for more info
 
 
-
-
-Librarys Used:
---------------
-- Minecraft-GUI-API:
-Copyright (c) 2013, DarkStorm (darkstorm@evilminecraft.net) All rights reserved.
-https://github.com/DarkStorm652/Minecraft-GUI-API
-
-- Slick2D:
-Copyright (c) 2013, Slick2D All rights reserved.
-http://slick.ninjacave.com/
-
-- CodecJLayerMP3:
-https://github.com/fireandfuel/CodecJLayerMP3
-Licensed under the LGPLv3
-
-
-License:
---------
-
-  mp3JukeBox - a mp3 Player Mod for Minecraft
-  Copyright (C) 2015 masll (minecraftforum.net)
-   
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+see http://github.com/masl123/mp3Jukebox/blob/master/License.md for the Licenses of this Mod and other Libraries used in this Project
