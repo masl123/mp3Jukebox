@@ -18,6 +18,7 @@
 
 package com.masl.mp3JUKEBOX;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.UUID;
@@ -46,7 +47,7 @@ public class Player {
 	@SideOnly(Side.CLIENT)
 	protected  void playSound() {
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
-			if(SoundLoader.music!=null&&SoundLoader.music.size()!=0){ 
+			if(SoundLoader.music!=null&&SoundLoader.music.size()>0){ 
 				stopSound();
 				soundPlaying=true;
 				currUUID = UUID.randomUUID().toString();
@@ -55,7 +56,14 @@ public class Player {
 				}
 				
 				try {
-					sndSystem.backgroundMusic(currUUID, SoundLoader.music.get(titleindex).toURI().toURL(), SoundLoader.music.get(titleindex).getName(), false);
+					
+					
+					if(titleindex<SoundLoader.music.size()){
+						File f = SoundLoader.music.get(titleindex);
+						sndSystem.backgroundMusic(currUUID, f.toURI().toURL(), f.getName(), false);
+					}
+					
+					
 					sndSystem.setVolume(currUUID, volume);
 					sndSystem.play(currUUID);
 				} catch (MalformedURLException e) {
@@ -211,7 +219,7 @@ public class Player {
 					try {
 						if (!soundPlaying) {
 							playSound();
-							mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText(SoundLoader.music.get(mp3Jukebox.instance.mp3Player.titleindex).getName());
+							mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText(mp3Jukebox.soundloader.getName());
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

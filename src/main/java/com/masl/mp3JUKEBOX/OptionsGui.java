@@ -97,7 +97,7 @@ public class OptionsGui extends AbstractGuiManager {
 			@Override
 			public void onButtonPress(Button button) {
 				mp3Jukebox.instance.mp3Player.prevSound();
-				label.setText(SoundLoader.music.get(mp3Jukebox.instance.mp3Player.titleindex).getName());
+				label.setText(mp3Jukebox.soundloader.getName());
 			}
 		});
 		testFrame.add(prevBtn, HorizontalGridConstraint.LEFT, VerticalGridConstraint.TOP);
@@ -113,7 +113,7 @@ public class OptionsGui extends AbstractGuiManager {
 			public void onButtonPress(Button button) {
 				if(!mp3Jukebox.instance.mp3Player.soundPlaying){
 					mp3Jukebox.instance.mp3Player.playSound();
-					label.setText(SoundLoader.music.get(mp3Jukebox.instance.mp3Player.titleindex).getName());
+					label.setText(mp3Jukebox.soundloader.getName());
 					
 				}else{
 					label.setText("NONE");
@@ -133,7 +133,7 @@ public class OptionsGui extends AbstractGuiManager {
 			@Override
 			public void onButtonPress(Button button) {
 				mp3Jukebox.instance.mp3Player.nextSound();
-				label.setText(SoundLoader.music.get(mp3Jukebox.instance.mp3Player.titleindex).getName());
+				label.setText(mp3Jukebox.soundloader.getName());
 			}
 		});
 		testFrame.add(nextBtn, HorizontalGridConstraint.RIGHT, VerticalGridConstraint.TOP);

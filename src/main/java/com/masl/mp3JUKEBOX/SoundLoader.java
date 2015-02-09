@@ -109,15 +109,18 @@ public class SoundLoader {
 	  }
 	  
 	  
-	  
-	  
-	  
+	  public String getName(){
+		  int index = mp3Jukebox.instance.mp3Player.titleindex;
+		  return index<music.size() && index>=0 ? music.get(index).getName() :  "NONE";
+	  }
 	  
 	  @SubscribeEvent
 	  @SideOnly(Side.CLIENT)
 	  public void soundsetup(SoundSetupEvent event){
 		  try {
 				SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
+			} catch (NoClassDefFoundError e) {
+				e.printStackTrace();
 			} catch (SoundSystemException e) {
 				e.printStackTrace();
 			}

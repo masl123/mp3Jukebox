@@ -58,7 +58,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.0.0")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.0.1")
 public class mp3Jukebox {
 
 	
