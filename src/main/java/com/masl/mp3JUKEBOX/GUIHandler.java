@@ -44,7 +44,7 @@ public class GUIHandler implements IGuiHandler {
 
 	
 	protected  OptionsGui mgr = new OptionsGui();
-	protected  GuiManagerDisplayScreen screen =  new GuiManagerDisplayScreen(mgr);
+	protected  CustomGuiManagerDisplayScreen screen =  new CustomGuiManagerDisplayScreen(mgr);
 	
 	
 	
@@ -64,6 +64,9 @@ public class GUIHandler implements IGuiHandler {
 			p.openGui(mp3Jukebox.instance, 388850 , Minecraft.getMinecraft().theWorld, (int)p.posX, (int)p.posY, (int)p.posZ);
 		}
 	}
+	
+	
+	
 	
 	public void setup(){
 		mgr.setup();

@@ -26,6 +26,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -97,7 +98,7 @@ public class OptionsGui extends AbstractGuiManager {
 			@Override
 			public void onButtonPress(Button button) {
 				mp3Jukebox.instance.mp3Player.prevSound();
-				label.setText(mp3Jukebox.soundloader.getName());
+				label.setText(mp3Jukebox.instance.soundloader.getName());
 			}
 		});
 		testFrame.add(prevBtn, HorizontalGridConstraint.LEFT, VerticalGridConstraint.TOP);
@@ -113,7 +114,7 @@ public class OptionsGui extends AbstractGuiManager {
 			public void onButtonPress(Button button) {
 				if(!mp3Jukebox.instance.mp3Player.soundPlaying){
 					mp3Jukebox.instance.mp3Player.playSound();
-					label.setText(mp3Jukebox.soundloader.getName());
+					label.setText(mp3Jukebox.instance.soundloader.getName());
 					
 				}else{
 					label.setText("NONE");
@@ -133,7 +134,7 @@ public class OptionsGui extends AbstractGuiManager {
 			@Override
 			public void onButtonPress(Button button) {
 				mp3Jukebox.instance.mp3Player.nextSound();
-				label.setText(mp3Jukebox.soundloader.getName());
+				label.setText(mp3Jukebox.instance.soundloader.getName());
 			}
 		});
 		testFrame.add(nextBtn, HorizontalGridConstraint.RIGHT, VerticalGridConstraint.TOP);
@@ -155,11 +156,11 @@ public class OptionsGui extends AbstractGuiManager {
 			@Override
 			public void onSliderValueChanged(Slider slider) {
 				mp3Jukebox.instance.mp3Player.setVolume((float)(slider.getValue()/100.0f));
+				//Minecraft.getMinecraft().gameSettings.setSoundLevel(SoundCategory.MUSIC, (float) (slider.getValue()/100.0f));				
 			}
 		});
 		slider.setEnabled(true);
 		testFrame.add(slider,HorizontalGridConstraint.CENTER, VerticalGridConstraint.BOTTOM);
-		
 		
 		
 		
@@ -197,4 +198,6 @@ public class OptionsGui extends AbstractGuiManager {
 			slider.resize();
 	}
 
+	
+	
 }

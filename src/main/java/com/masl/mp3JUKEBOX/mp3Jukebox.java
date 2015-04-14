@@ -58,14 +58,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.0.1")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.0.2")
 public class mp3Jukebox {
 
 	
 		public static Logger logger = LogManager.getLogger();
 		public static String MODID = "mp3Jukebox";
-		public final static SoundLoader soundloader = new SoundLoader();
-		public static Side currSide;
+		public final SoundLoader soundloader = new SoundLoader();
 		public  Player mp3Player;
 		public  List<KeyBinding> keyBindings;
 		public  GUIHandler guiHandlerInstance;
@@ -81,7 +80,6 @@ public class mp3Jukebox {
        
         @EventHandler // used in 1.6.2
         public void preInit(FMLPreInitializationEvent event) {
-        	currSide = event.getSide();
         	guiHandlerInstance = new GUIHandler();
         	mp3Player = new Player();
         	

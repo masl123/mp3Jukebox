@@ -19,8 +19,16 @@
 package com.masl.mp3JUKEBOX;
 
 
+import org.darkstorm.minecraft.gui.util.GuiManagerDisplayScreen;
+
+import net.minecraft.client.Minecraft;
+
+
 public class CommonProxy {
 
+		protected  OptionsGui mgr = new OptionsGui();
+		protected  GuiManagerDisplayScreen screen =  new GuiManagerDisplayScreen(mgr);
+	
         // Client stuff
         public void registerRenderers() {
                 // Nothing here as the server doesn't render graphics or entities!
@@ -30,4 +38,7 @@ public class CommonProxy {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		
+		
 }

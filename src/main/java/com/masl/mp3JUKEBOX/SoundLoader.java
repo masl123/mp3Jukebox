@@ -29,6 +29,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
+
+
+
+
+import com.masl.Mp4Codecc;
+
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
@@ -41,6 +47,7 @@ import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundList;
+import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundRegistry;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.util.ResourceLocation;
@@ -50,6 +57,7 @@ import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.client.event.sound.SoundSetupEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Unload;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -59,6 +67,8 @@ public class SoundLoader {
 
 	 public static List<File> music = new LinkedList();
 	 public static float newVolume;
+	 
+	 
 	 
 	  @net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 	  @SideOnly(Side.CLIENT)
@@ -87,26 +97,24 @@ public class SoundLoader {
 	  
 	  
 	  
-	  public void setMusicTickerTime(int a) throws Exception{
-		  Minecraft mc = Minecraft.getMinecraft();
-		  for(Field f : Minecraft.class.getDeclaredFields()){
-			  if(f.getType().equals(MusicTicker.class)){
-				  f.setAccessible(true);
-				  MusicTicker tick = (MusicTicker)f.get(mc);
-				  
-				  
-				  for(Field field : MusicTicker.class.getDeclaredFields()){
-					  if(field.getType().equals(Integer.TYPE)){
-						 System.out.println("LOL");
-						  field.setAccessible(true);
-						  field.set(tick, a);
-						  
-					  }
-				  }
-				  break;
-			  }   
-		  }  
-	  }
+//	  public void setMusicTickerTime(int a) throws Exception{
+//		  Minecraft mc = Minecraft.getMinecraft();
+//		  for(Field f : Minecraft.class.getDeclaredFields()){
+//			  if(f.getType().equals(MusicTicker.class)){
+//				  f.setAccessible(true);
+//				  MusicTicker tick = (MusicTicker)f.get(mc);
+//				  
+//				  
+//				  for(Field field : MusicTicker.class.getDeclaredFields()){
+//					  if(field.getType().equals(Integer.TYPE)){
+//						  field.setAccessible(true);
+//						  field.set(tick, a);  
+//					  }
+//				  }
+//				  break;
+//			  }   
+//		  }  
+//	  }
 	  
 	  
 	  public String getName(){
@@ -119,6 +127,7 @@ public class SoundLoader {
 	  public void soundsetup(SoundSetupEvent event){
 		  try {
 				SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
+				//SoundSystemConfig.setCodec("m4a", Mp4Codecc.class);
 			} catch (NoClassDefFoundError e) {
 				e.printStackTrace();
 			} catch (SoundSystemException e) {
@@ -126,14 +135,16 @@ public class SoundLoader {
 			}
 	  }
 	  
+	
+	  
+	  
 	  @SubscribeEvent
 	  @SideOnly(Side.CLIENT)
 	  public void GUIConfigchanged(ActionPerformedEvent event){
 		  if(event.gui instanceof GuiOptions){
 			  synchronized(Minecraft.getMinecraft().getSoundHandler()){
+				  mp3Jukebox.instance.mp3Player.getsndSystem();
 				  mp3Jukebox.instance.mp3Player.setVolume((float) (mp3Jukebox.instance.guiHandlerInstance.mgr.slider.getValue()/100));
-				  
-			  
 			  }
 		}
       }
@@ -144,6 +155,35 @@ public class SoundLoader {
 		  	mp3Jukebox.instance.mp3Player.stopSound();
 		  	mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText("NONE");
       }
+	  
+	  
+	  ISound currentMusic;
+
+	  
+	  
+	  @SubscribeEvent
+	  @SideOnly(Side.CLIENT)
+	  public void PlaySoundEvent (PlaySoundEvent event){
+		  
+		
+		 if(event.category == SoundCategory.MUSIC && mp3Jukebox.instance.mp3Player.soundPlaying){
+			System.out.println("Stoped Streamed Sound:  "+event.category);
+			event.result=null;	
+			event.setResult(Result.DENY);
+		 }else if(event.category == SoundCategory.MUSIC){
+			 
+			 currentMusic = event.sound;
+		 }
+	  }
+	  
+	  public void stopMusic(SoundHandler soundHandler){
+		  if(currentMusic!=null){
+			  soundHandler.stopSound(currentMusic);
+			  soundHandler.update();
+		  }
+	  }
+	  
+	  
 
 }
 

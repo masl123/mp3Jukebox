@@ -20,6 +20,8 @@
 package com.masl.mp3JUKEBOX;
 
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -29,6 +31,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerGUIs(mp3Jukebox mod) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(mod, mp3Jukebox.instance.guiHandlerInstance);
 	}
+	
 	
        
 }

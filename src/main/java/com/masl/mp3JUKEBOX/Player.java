@@ -38,7 +38,7 @@ public class Player {
 	
 	private String currUUID;
 	protected static boolean soundPlaying = false;
-	private SoundSystem sndSystem;
+	protected SoundSystem sndSystem;
 	private long timeLastClicked = 0;
 	int titleindex = 0;
 	protected float volume = 0.5f;
@@ -55,17 +55,26 @@ public class Player {
 					getsndSystem();
 				}
 				
+				
 				try {
 					
 					
 					if(titleindex<SoundLoader.music.size()){
+						mp3Jukebox.instance.soundloader.stopMusic(Minecraft.getMinecraft().getSoundHandler());
+						
+						
 						File f = SoundLoader.music.get(titleindex);
+						
+					
 						sndSystem.backgroundMusic(currUUID, f.toURI().toURL(), f.getName(), false);
 					}
 					
 					
 					sndSystem.setVolume(currUUID, volume);
 					sndSystem.play(currUUID);
+					
+					mp3Jukebox.instance.soundloader.stopMusic(Minecraft.getMinecraft().getSoundHandler());
+					
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -79,10 +88,7 @@ public class Player {
 	protected  void stopSound() {
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
 			if (currUUID != null && soundPlaying) {
-				
-				
-				
-				
+
 				soundPlaying=false;
 				if(sndSystem==null){
 					getsndSystem();
@@ -144,13 +150,14 @@ public class Player {
 			getsndSystem();
 		}
 		this.volume = volume * Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER);
-		sndSystem.setVolume(currUUID, this.volume );
+
+			sndSystem.setVolume(currUUID, this.volume );
 	}
 	
 	
 	
 	@SideOnly(Side.CLIENT)
-	private  void getsndSystem(){
+	protected  void getsndSystem(){
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
 			try {
 				
@@ -193,15 +200,19 @@ public class Player {
 	}
 	
 	
-	 @net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-	 @SideOnly(Side.CLIENT)
-	 public void onSoundsLoaded(SoundLoadEvent SLEvent)
-	 {
-		 getsndSystem();
-	 }
 	
-	 @SideOnly(Side.CLIENT)
+	
+	@net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onSoundsLoaded(SoundLoadEvent SLEvent)
+	{
+		getsndSystem();
+	}
+	
+	@SideOnly(Side.CLIENT)
 	protected void addStreamListener(){	
+		
+		
 		SoundSystemConfig.addStreamListener(new IStreamListener(){
 			@Override
 			public void endOfStream(String arg0, int arg1) {
@@ -219,7 +230,7 @@ public class Player {
 					try {
 						if (!soundPlaying) {
 							playSound();
-							mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText(mp3Jukebox.soundloader.getName());
+							mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText(mp3Jukebox.instance.soundloader.getName());
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -227,6 +238,5 @@ public class Player {
 				}
 			}
 		});
-	
 	}
 }

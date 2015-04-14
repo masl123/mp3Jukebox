@@ -15,6 +15,8 @@ public class GuiManagerDisplayScreen extends GuiScreen {
 		this.guiManager = guiManager;
 	}
 
+	
+	
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button); // This line throws IOException which is why this method has to have the 'throws' declaration
