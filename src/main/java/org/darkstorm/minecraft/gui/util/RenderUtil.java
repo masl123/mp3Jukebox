@@ -138,6 +138,9 @@ public static void drawTexturedModalRect(int par1, int par2, int par3, int par4,
 		int scaleFactor = 0;
 		while(scaleFactor < scale && minecraft.displayWidth / (scaleFactor + 1) >= 320 && minecraft.displayHeight / (scaleFactor + 1) >= 240)
 			scaleFactor++;
+		if(scaleFactor==0){//quick Fix for a divided by 0 Exception
+			scaleFactor = 1;
+		}
 		return new Point(Mouse.getX() / scaleFactor, minecraft.displayHeight / scaleFactor - Mouse.getY() / scaleFactor - 1);
 	}
 

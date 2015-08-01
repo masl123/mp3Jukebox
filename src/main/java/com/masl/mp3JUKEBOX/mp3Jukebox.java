@@ -58,16 +58,16 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.0.2")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.1.0")
 public class mp3Jukebox {
 
-	
 		public static Logger logger = LogManager.getLogger();
 		public static String MODID = "mp3Jukebox";
-		public final SoundLoader soundloader = new SoundLoader();
-		public  Player mp3Player;
+		
 		public  List<KeyBinding> keyBindings;
-		public  GUIHandler guiHandlerInstance;
+		protected  GUIHandler guiHandlerInstance;
+		private SoundLoader soundloader;
+		private  Player mp3Player;
 		
 		
         // The instance of your mod that Forge uses.
@@ -77,17 +77,21 @@ public class mp3Jukebox {
         // Says where the client and server 'proxy' code is loaded.
         @SidedProxy(clientSide="com.masl.mp3JUKEBOX.ClientProxy", serverSide="com.masl.mp3JUKEBOX.CommonProxy")
         public static CommonProxy proxy;
-       
+        
         @EventHandler // used in 1.6.2
         public void preInit(FMLPreInitializationEvent event) {
-        	guiHandlerInstance = new GUIHandler();
         	mp3Player = new Player();
+        	guiHandlerInstance = new GUIHandler(mp3Player);
+        	soundloader = new SoundLoader(mp3Player);
         	
         	
         	MinecraftForge.EVENT_BUS.register(soundloader);
+        	MinecraftForge.EVENT_BUS.register(guiHandlerInstance);
+        	MinecraftForge.EVENT_BUS.register(guiHandlerInstance.mgr);
+        	MinecraftForge.EVENT_BUS.register(mp3Player);
         	FMLCommonHandler.instance().bus().register(guiHandlerInstance);
         	FMLCommonHandler.instance().bus().register(guiHandlerInstance.mgr);
-        	FMLCommonHandler.instance().bus().register(mp3Player);
+        	//FMLCommonHandler.instance().bus().register(mp3Player);
         	
         	keyBindings = new ArrayList<KeyBinding>(1);
         	keyBindings.add(new KeyBinding("Mp3 Player GUI", Keyboard.KEY_END, "mp3Jukebox"));
@@ -116,7 +120,4 @@ public class mp3Jukebox {
         		 ClientRegistry.registerKeyBinding(b);
         	}
         }
-       
-        
-       
 }

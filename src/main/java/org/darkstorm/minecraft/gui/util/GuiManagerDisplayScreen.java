@@ -3,10 +3,14 @@ package org.darkstorm.minecraft.gui.util;
 import java.awt.Rectangle;
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 
 import org.darkstorm.minecraft.gui.GuiManager;
 import org.darkstorm.minecraft.gui.component.*;
+import org.lwjgl.opengl.GL11;
 
 public class GuiManagerDisplayScreen extends GuiScreen {
 	private final GuiManager guiManager;
@@ -93,7 +97,8 @@ public class GuiManagerDisplayScreen extends GuiScreen {
 
 	@Override
 	public void drawScreen(int par2, int par3, float par4) {
-		guiManager.render();
+	    
 		super.drawScreen(par2, par3, par4);
+		guiManager.render();
 	}
 }

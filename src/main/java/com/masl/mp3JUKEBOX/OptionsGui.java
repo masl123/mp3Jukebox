@@ -56,17 +56,18 @@ import org.darkstorm.minecraft.gui.theme.Theme;
 import org.darkstorm.minecraft.gui.theme.simple.SimpleTheme;
 
 public class OptionsGui extends AbstractGuiManager {
+	
 	private final AtomicBoolean setup;
 	private int counter = 1;
-	
 
-	protected Frame testFrame;
-	protected Slider slider ;
-	protected BasicLabel label;
+	private Frame testFrame;
+	private Slider slider;
+	private BasicLabel label;
+	private Player mp3Player;
 	
-	
-	public OptionsGui(){
+	public OptionsGui(Player mp3Player){
 		setup = new AtomicBoolean();
+		this.mp3Player=mp3Player;
 	}
 	
 	
@@ -97,8 +98,8 @@ public class OptionsGui extends AbstractGuiManager {
 		prevBtn.addButtonListener(new ButtonListener() {
 			@Override
 			public void onButtonPress(Button button) {
-				mp3Jukebox.instance.mp3Player.prevSound();
-				label.setText(mp3Jukebox.instance.soundloader.getName());
+				mp3Player.prevSound();
+				label.setText(mp3Player.getName());
 			}
 		});
 		testFrame.add(prevBtn, HorizontalGridConstraint.LEFT, VerticalGridConstraint.TOP);
@@ -112,13 +113,13 @@ public class OptionsGui extends AbstractGuiManager {
 		playBtn.addButtonListener(new ButtonListener() {
 			@Override
 			public void onButtonPress(Button button) {
-				if(!mp3Jukebox.instance.mp3Player.soundPlaying){
-					mp3Jukebox.instance.mp3Player.playSound();
-					label.setText(mp3Jukebox.instance.soundloader.getName());
+				if(!mp3Player.isSoundPlaying()){
+					mp3Player.playSound();
+					label.setText(mp3Player.getName());
 					
 				}else{
 					label.setText("NONE");
-					mp3Jukebox.instance.mp3Player.stopSound();
+					mp3Player.stopSound();
 				}
 			}
 		});
@@ -133,8 +134,8 @@ public class OptionsGui extends AbstractGuiManager {
 		nextBtn.addButtonListener(new ButtonListener() {
 			@Override
 			public void onButtonPress(Button button) {
-				mp3Jukebox.instance.mp3Player.nextSound();
-				label.setText(mp3Jukebox.instance.soundloader.getName());
+				mp3Player.nextSound();
+				label.setText(mp3Player.getName());
 			}
 		});
 		testFrame.add(nextBtn, HorizontalGridConstraint.RIGHT, VerticalGridConstraint.TOP);
@@ -155,7 +156,7 @@ public class OptionsGui extends AbstractGuiManager {
 		slider.addSliderListener(new SliderListener(){
 			@Override
 			public void onSliderValueChanged(Slider slider) {
-				mp3Jukebox.instance.mp3Player.setVolume((float)(slider.getValue()/100.0f));
+				mp3Player.setVolume((float)(slider.getValue()/100.0f));
 				//Minecraft.getMinecraft().gameSettings.setSoundLevel(SoundCategory.MUSIC, (float) (slider.getValue()/100.0f));				
 			}
 		});
@@ -198,6 +199,18 @@ public class OptionsGui extends AbstractGuiManager {
 			slider.resize();
 	}
 
+	protected void setVolumeSliderVar(int i){
+		slider.setValue(i);
+	}
+	
+	protected void setNameLabel(String s){
+		label.setText(s);
+	}
+	
+	protected double getVolumeSliderVar(){
+		return slider.getValue();
+	}
+	
 	
 	
 }

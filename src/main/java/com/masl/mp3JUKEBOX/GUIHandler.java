@@ -24,9 +24,13 @@ import org.darkstorm.minecraft.gui.GuiManager;
 import org.darkstorm.minecraft.gui.util.GuiManagerDisplayScreen;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -35,18 +39,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GUIHandler implements IGuiHandler {
-
+	
+	private  CustomGuiManagerDisplayScreen screen;
+	protected  OptionsGui mgr;
+	
+	public GUIHandler(Player mp3Player){
+		mgr = new OptionsGui(mp3Player);
+		screen =  new CustomGuiManagerDisplayScreen(mgr, mp3Player);
+	}
+	
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
 		return null;
 	}
-
-	
-	protected  OptionsGui mgr = new OptionsGui();
-	protected  CustomGuiManagerDisplayScreen screen =  new CustomGuiManagerDisplayScreen(mgr);
-	
-	
 	
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -67,8 +73,15 @@ public class GUIHandler implements IGuiHandler {
 	
 	
 	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onClickMainMenuButton(ActionPerformedEvent event){
+		if(event.button.id == 1000){
+			  Minecraft.getMinecraft().displayGuiScreen(mp3Jukebox.instance.guiHandlerInstance.screen); 
+		}
+	}
 	
-	public void setup(){
+	protected void setup(){
 		mgr.setup();
 	}
 }

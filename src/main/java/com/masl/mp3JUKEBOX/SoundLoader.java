@@ -33,6 +33,12 @@ import org.apache.logging.log4j.LogManager;
 
 
 
+
+
+
+
+
+
 import com.masl.Mp4Codecc;
 
 import de.cuina.fireandfuel.CodecJLayerMP3;
@@ -49,9 +55,12 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundList;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.audio.SoundRegistry;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.client.event.sound.SoundSetupEvent;
@@ -64,127 +73,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.client.event.sound.*;
 
 public class SoundLoader {
+	private Player mp3Player;
 
-	 public static List<File> music = new LinkedList();
-	 public static float newVolume;
-	 
-	 
-	 
-	  @net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-	  @SideOnly(Side.CLIENT)
-	  public void onSoundsLoaded(SoundLoadEvent SLEvent)
-	  {
-		 loadmusic();
-	  }
-	  
-	  
-	  @SideOnly(Side.CLIENT)
-      public void loadmusic(){
-  	   File musicfile = null;
-         
-  	   	musicfile = new File(Minecraft.getMinecraft().mcDataDir, "music");
-        System.out.println(musicfile);
-        musicfile.mkdirs();
-        
-        
-        for(File m: musicfile.listFiles()){
-     	   	if(FilenameUtils.getExtension(m.getAbsolutePath()).equals("ogg") || FilenameUtils.getExtension(m.getAbsolutePath()).equals("mp3")){
-     	   		music.add(m);
-     	   		mp3Jukebox.logger.log(Level.INFO,"FOUND SONG: "+m.getAbsolutePath());
-     	   	}
-        }
-      }
-	  
-	  
-	  
-//	  public void setMusicTickerTime(int a) throws Exception{
-//		  Minecraft mc = Minecraft.getMinecraft();
-//		  for(Field f : Minecraft.class.getDeclaredFields()){
-//			  if(f.getType().equals(MusicTicker.class)){
-//				  f.setAccessible(true);
-//				  MusicTicker tick = (MusicTicker)f.get(mc);
-//				  
-//				  
-//				  for(Field field : MusicTicker.class.getDeclaredFields()){
-//					  if(field.getType().equals(Integer.TYPE)){
-//						  field.setAccessible(true);
-//						  field.set(tick, a);  
-//					  }
-//				  }
-//				  break;
-//			  }   
-//		  }  
-//	  }
-	  
-	  
-	  public String getName(){
-		  int index = mp3Jukebox.instance.mp3Player.titleindex;
-		  return index<music.size() && index>=0 ? music.get(index).getName() :  "NONE";
-	  }
-	  
-	  @SubscribeEvent
-	  @SideOnly(Side.CLIENT)
-	  public void soundsetup(SoundSetupEvent event){
-		  try {
-				SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
-				//SoundSystemConfig.setCodec("m4a", Mp4Codecc.class);
-			} catch (NoClassDefFoundError e) {
-				e.printStackTrace();
-			} catch (SoundSystemException e) {
-				e.printStackTrace();
-			}
-	  }
-	  
+	public SoundLoader(Player mp3Player){
+		this.mp3Player=mp3Player;
+	}
 	
-	  
-	  
-	  @SubscribeEvent
-	  @SideOnly(Side.CLIENT)
-	  public void GUIConfigchanged(ActionPerformedEvent event){
-		  if(event.gui instanceof GuiOptions){
-			  synchronized(Minecraft.getMinecraft().getSoundHandler()){
-				  mp3Jukebox.instance.mp3Player.getsndSystem();
-				  mp3Jukebox.instance.mp3Player.setVolume((float) (mp3Jukebox.instance.guiHandlerInstance.mgr.slider.getValue()/100));
-			  }
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onSoundsLoaded(SoundLoadEvent SLEvent) {
+		loadmusic();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void loadmusic() {
+		File musicfile = null;
+
+		musicfile = new File(Minecraft.getMinecraft().mcDataDir, "music");
+		System.out.println(musicfile);
+		musicfile.mkdirs();
+
+		mp3Player.resetMusicList();
+
+		for (File m : musicfile.listFiles()) {
+			if (FilenameUtils.getExtension(m.getAbsolutePath()).equals("ogg") || FilenameUtils.getExtension(m.getAbsolutePath()).equals("mp3")) {
+				mp3Player.addMusicTitle(m);
+				mp3Jukebox.logger.log(Level.INFO,"FOUND SONG: " + m.getAbsolutePath());
+			}
 		}
-      }
+	}
 	  
-	  @SubscribeEvent
-      @SideOnly(Side.CLIENT)
-      public void FMLServerStopped(Unload event){
-		  	mp3Jukebox.instance.mp3Player.stopSound();
-		  	mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText("NONE");
-      }
-	  
-	  
-	  ISound currentMusic;
-
-	  
-	  
-	  @SubscribeEvent
-	  @SideOnly(Side.CLIENT)
-	  public void PlaySoundEvent (PlaySoundEvent event){
-		  
-		
-		 if(event.category == SoundCategory.MUSIC && mp3Jukebox.instance.mp3Player.soundPlaying){
-			System.out.println("Stoped Streamed Sound:  "+event.category);
-			event.result=null;	
-			event.setResult(Result.DENY);
-		 }else if(event.category == SoundCategory.MUSIC){
-			 
-			 currentMusic = event.sound;
-		 }
-	  }
-	  
-	  public void stopMusic(SoundHandler soundHandler){
-		  if(currentMusic!=null){
-			  soundHandler.stopSound(currentMusic);
-			  soundHandler.update();
-		  }
-	  }
-	  
-	  
-
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void soundCodecSetup(SoundSetupEvent event) {
+		try {
+			SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
+			// SoundSystemConfig.setCodec("m4a", Mp4Codecc.class);
+		} catch (NoClassDefFoundError e) {
+			e.printStackTrace();
+		} catch (SoundSystemException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 

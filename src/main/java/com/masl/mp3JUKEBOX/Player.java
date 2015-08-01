@@ -21,50 +21,57 @@ package com.masl.mp3JUKEBOX;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import paulscode.sound.IStreamListener;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiOptions;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Player {
 	
 	private String currUUID;
-	protected static boolean soundPlaying = false;
-	protected SoundSystem sndSystem;
-	private long timeLastClicked = 0;
-	int titleindex = 0;
-	protected float volume = 0.5f;
-	
+	private boolean soundPlaying = false;
+	private SoundSystem sndSystem;
+	private List<File> music;
+	private int titleindex = 0;
+	private float volume = 0.5f;
+	private float newVolume;
 	
 	@SideOnly(Side.CLIENT)
 	protected  void playSound() {
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
-			if(SoundLoader.music!=null&&SoundLoader.music.size()>0){ 
+			if(music!=null&&music.size()>0){ 
 				stopSound();
 				soundPlaying=true;
 				currUUID = UUID.randomUUID().toString();
 				if(sndSystem==null){
 					getsndSystem();
 				}
-				
-				
 				try {
-					
-					
-					if(titleindex<SoundLoader.music.size()){
-						mp3Jukebox.instance.soundloader.stopMusic(Minecraft.getMinecraft().getSoundHandler());
+					if(titleindex < music.size()){
+						stopMusic(Minecraft.getMinecraft().getSoundHandler());
 						
 						
-						File f = SoundLoader.music.get(titleindex);
-						
+						File f = music.get(titleindex);
+						System.out.println(currUUID+" "+f);
 					
 						sndSystem.backgroundMusic(currUUID, f.toURI().toURL(), f.getName(), false);
 					}
@@ -73,26 +80,54 @@ public class Player {
 					sndSystem.setVolume(currUUID, volume);
 					sndSystem.play(currUUID);
 					
-					mp3Jukebox.instance.soundloader.stopMusic(Minecraft.getMinecraft().getSoundHandler());
+					stopMusic(Minecraft.getMinecraft().getSoundHandler());
 					
-				} catch (MalformedURLException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}
+	}
+	
+	private ISound currentMusic;
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void PlaySoundEvent(PlaySoundEvent event) {
+		if (event.category == SoundCategory.MUSIC && soundPlaying) {
+			System.out.println("Stoped Streamed Sound:  " + event.category);
+			event.result = null;
+			event.setResult(Result.DENY);
+		} else if (event.category == SoundCategory.MUSIC) {
+
+			currentMusic = event.sound;
+		}
+	}
+
+	protected void stopMusic(SoundHandler soundHandler) {
+		if (currentMusic != null) {
+			soundHandler.stopSound(currentMusic);
+			soundHandler.update();
+		}
+	}
+	
+	protected String getName() {
+		int index = titleindex;
+		if (index < music.size() && index >= 0)
+			return music.get(index).getName();
+		else
+			return "NONE";
 	}
 	
 	
 	@SideOnly(Side.CLIENT)
 	protected  void stopSound() {
+		if(sndSystem==null){
+			getsndSystem();
+		}
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
 			if (currUUID != null && soundPlaying) {
-
 				soundPlaying=false;
-				if(sndSystem==null){
-					getsndSystem();
-				}
 				sndSystem.stop(currUUID);
 				sndSystem.removeSource(currUUID);
 			}
@@ -105,7 +140,7 @@ public class Player {
 			stopSound();
 		}
 		
-		if(titleindex+1<SoundLoader.music.size()){
+		if(titleindex+1<music.size()){
 			titleindex++;
 		}else{
 			titleindex=0;
@@ -129,7 +164,7 @@ public class Player {
 		if(titleindex-1>=0){
 			titleindex--;
 		}else{
-			titleindex=SoundLoader.music.size()-1;
+			titleindex=music.size()-1;
 		}
 		
 		try {
@@ -139,19 +174,15 @@ public class Player {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
 	@SideOnly(Side.CLIENT)
-	protected void setVolume(float volume){
+	protected void setVolume(float oldVolume){
 		if(sndSystem==null){
 			getsndSystem();
 		}
-		this.volume = volume * Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER);
-
-			sndSystem.setVolume(currUUID, this.volume );
+		this.volume = oldVolume * Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER);
+		sndSystem.setVolume(currUUID, this.volume );
 	}
 	
 	
@@ -160,11 +191,7 @@ public class Player {
 	protected  void getsndSystem(){
 		synchronized(Minecraft.getMinecraft().getSoundHandler()){
 			try {
-				
-				
 				//Field sndManagerField = SoundHandler.class.getDeclaredField("sndManager");
-				
-				
 				Field[] soundHandlerfields = SoundHandler.class.getDeclaredFields();
 				SoundManager manager = null;
 				
@@ -187,32 +214,16 @@ public class Player {
 						break;
 					}
 				}
-			
-				//Field sndSystemField = SoundManager.class.getDeclaredField("sndSystem");
-				//sndSystemField.setAccessible(true);
-				//sndSystem = (SoundSystem) sndSystemField.get(manager);
-				
 			} catch (Exception e) {
-				
 				e.printStackTrace();
 			} 
 		}
 	}
 	
 	
-	
-	
-	@net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onSoundsLoaded(SoundLoadEvent SLEvent)
-	{
-		getsndSystem();
-	}
-	
-	@SideOnly(Side.CLIENT)
+	 @SideOnly(Side.CLIENT)
 	protected void addStreamListener(){	
-		
-		
+
 		SoundSystemConfig.addStreamListener(new IStreamListener(){
 			@Override
 			public void endOfStream(String arg0, int arg1) {
@@ -221,7 +232,7 @@ public class Player {
 						stopSound();
 					}
 					
-					if(titleindex+1<SoundLoader.music.size()){
+					if(titleindex+1 < music.size()){
 						titleindex++;
 					}else{
 						titleindex=0;
@@ -230,7 +241,7 @@ public class Player {
 					try {
 						if (!soundPlaying) {
 							playSound();
-							mp3Jukebox.instance.guiHandlerInstance.mgr.label.setText(mp3Jukebox.instance.soundloader.getName());
+							mp3Jukebox.instance.guiHandlerInstance.mgr.setNameLabel(getName());
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -239,4 +250,38 @@ public class Player {
 			}
 		});
 	}
+	
+	protected void resetMusicList(){
+		music = new LinkedList();
+		titleindex = 0;
+    }
+	
+	protected void addMusicTitle(File f){
+		music.add(f);
+	}
+	
+	protected boolean isSoundPlaying(){
+		return soundPlaying;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void GUIMainMenuOpened(InitGuiEvent event) {
+		if (event.gui instanceof GuiMainMenu) {
+			event.buttonList.add(new GuiButton(1000, event.gui.width / 2 - 100, event.gui.height - 30, "mp3 Jukebox"));
+		} 
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void GUIConfigChanged(ActionPerformedEvent event) {
+		if (event.gui instanceof GuiOptions) {
+			synchronized (Minecraft.getMinecraft().getSoundHandler()) {
+				getsndSystem();
+				stopSound();
+				setVolume((float) (mp3Jukebox.instance.guiHandlerInstance.mgr.getVolumeSliderVar() / 100));
+			}
+		}
+	}
+	
 }
