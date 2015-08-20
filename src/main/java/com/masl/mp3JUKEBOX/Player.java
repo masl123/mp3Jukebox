@@ -106,8 +106,14 @@ public class Player {
 
 	protected void stopMusic(SoundHandler soundHandler) {
 		if (currentMusic != null) {
-			soundHandler.stopSound(currentMusic);
-			soundHandler.update();
+			try{ //TODO: Only Workaround; Find better Fix for a Concurrent Modification Exception thats happening here.
+				synchronized(soundHandler){
+					soundHandler.stopSound(currentMusic);
+					soundHandler.update();
+				}
+			}catch(Throwable t){
+				mp3Jukebox.logger.error(t.getMessage());
+			}
 		}
 	}
 	

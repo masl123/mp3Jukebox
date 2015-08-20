@@ -58,7 +58,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.1.0")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.1.1")
 public class mp3Jukebox {
 
 		public static Logger logger = LogManager.getLogger();
