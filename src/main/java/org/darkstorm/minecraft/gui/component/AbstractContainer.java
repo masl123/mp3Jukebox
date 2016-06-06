@@ -18,8 +18,10 @@ public abstract class AbstractContainer extends AbstractComponent implements
 		super.render();
 
 		synchronized(children) {
-			for(Component child : children.keySet())
+			for(Component child : children.keySet()){
 				child.render();
+			}
+			
 		}
 	}
 

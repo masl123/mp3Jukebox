@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import org.lwjgl.input.Mouse;
 
@@ -17,7 +18,7 @@ public class RenderUtil {
 	public static void scissorBox(int x, int y, int xend, int yend) {
 		int width = xend - x;
 		int height = yend - y;
-		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayHeight, Minecraft.getMinecraft().displayWidth);
 		int factor = sr.getScaleFactor();
 		int bottomY = Minecraft.getMinecraft().currentScreen.height - yend;
 		glScissor(x * factor, bottomY * factor, width * factor, height * factor);
@@ -59,11 +60,11 @@ public static void drawTexturedModalRect(int par1, int par2, int par3, int par4,
 		float var8 = 0.00390625F;
 		Tessellator var9 = Tessellator.getInstance();
 		WorldRenderer var10 = var9.getWorldRenderer();
-		var10.startDrawingQuads();
+		var10.startDrawing(GL_QUADS);
 		var10.addVertexWithUV((par1 + 0), (par2 + par6), 0, ((par3 + 0) * var7), ((par4 + par6) * var8));
-		var10.addVertexWithUV((par1 + par5), (par2 + par6), 0, ((par3 + par5) * var7), ((par4 + par6) * var8));
-		var10.addVertexWithUV((par1 + par5), (par2 + 0), 0, ((par3 + par5) * var7), ((par4 + 0) * var8));
-		var10.addVertexWithUV((par1 + 0), (par2 + 0), 0, ((par3 + 0) * var7), ((par4 + 0) * var8));
+		var10.addVertexWithUV((par1 + par5), (par2 + par6), 0, ((par3 + par5) * var7),  ((par4 + par6) * var8));
+		var10.addVertexWithUV((par1 + par5), (par2 + 0), 0, ((par3 + par5) * var7),  ((par4 + 0) * var8));
+		var10.addVertexWithUV((par1 + 0), (par2 + 0), 0, (int) ((par3 + 0) * var7), (int) ((par4 + 0) * var8));;
 		var9.draw();
 	}
 

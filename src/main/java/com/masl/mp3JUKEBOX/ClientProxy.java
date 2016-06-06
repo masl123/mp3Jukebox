@@ -17,7 +17,7 @@
   */
 
 
-package com.masl.mp3JUKEBOX;
+package com.masl.mp3Jukebox;
 
 
 import net.minecraft.client.Minecraft;

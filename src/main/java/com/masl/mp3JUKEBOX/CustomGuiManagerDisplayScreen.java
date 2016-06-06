@@ -17,8 +17,9 @@
   */
 
 
-package com.masl.mp3JUKEBOX;
+package com.masl.mp3Jukebox;
 
+import java.awt.Rectangle;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 import org.darkstorm.minecraft.gui.GuiManager;
+import org.darkstorm.minecraft.gui.component.Component;
+import org.darkstorm.minecraft.gui.component.Frame;
 import org.darkstorm.minecraft.gui.util.GuiManagerDisplayScreen;
+import org.lwjgl.input.Mouse;
 
 public class CustomGuiManagerDisplayScreen extends GuiManagerDisplayScreen {
 
@@ -59,12 +63,24 @@ public class CustomGuiManagerDisplayScreen extends GuiManagerDisplayScreen {
 		drawWorldBackground(10);
 		super.drawScreen(par2, par3, par4);
 	}
-	
+
 	
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if(button.id==1001){
+        int x = Mouse.getX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
+        
+   
+        
+        
+		if(button.id == 1001){
+			for(Frame frame : guiManager.getFrames()) {
+				if(frame.getArea().contains(x,y)){
+					return;
+				}	
+			}
+			
 			 this.mc.displayGuiScreen((GuiScreen)null);
              this.mc.setIngameFocus();
 		}

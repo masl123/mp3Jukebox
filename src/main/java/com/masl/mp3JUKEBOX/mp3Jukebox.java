@@ -16,7 +16,7 @@
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
 
-package com.masl.mp3JUKEBOX;
+package com.masl.mp3Jukebox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.1.1")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.2.1")
 public class mp3Jukebox {
 
 		public static Logger logger = LogManager.getLogger();
@@ -75,7 +75,7 @@ public class mp3Jukebox {
         public static mp3Jukebox instance;
        
         // Says where the client and server 'proxy' code is loaded.
-        @SidedProxy(clientSide="com.masl.mp3JUKEBOX.ClientProxy", serverSide="com.masl.mp3JUKEBOX.CommonProxy")
+        @SidedProxy(clientSide="com.masl.mp3Jukebox.ClientProxy", serverSide="com.masl.mp3Jukebox.CommonProxy")
         public static CommonProxy proxy;
         
         @EventHandler // used in 1.6.2

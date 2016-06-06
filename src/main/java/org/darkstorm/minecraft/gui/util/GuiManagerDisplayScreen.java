@@ -13,7 +13,7 @@ import org.darkstorm.minecraft.gui.component.*;
 import org.lwjgl.opengl.GL11;
 
 public class GuiManagerDisplayScreen extends GuiScreen {
-	private final GuiManager guiManager;
+	protected final GuiManager guiManager;
 
 	public GuiManagerDisplayScreen(GuiManager guiManager) {
 		this.guiManager = guiManager;
@@ -21,9 +21,10 @@ public class GuiManagerDisplayScreen extends GuiScreen {
 
 	
 	
-	@Override
+
 	protected void mouseClicked(int x, int y, int button) throws IOException {
 		super.mouseClicked(x, y, button); // This line throws IOException which is why this method has to have the 'throws' declaration
+		
 		for(Frame frame : guiManager.getFrames()) {
 			if(!frame.isVisible())
 				continue;
@@ -33,7 +34,8 @@ public class GuiManagerDisplayScreen extends GuiScreen {
 						if(area.contains(x - frame.getX() - component.getX(), y - frame.getY() - component.getY())) {
 							frame.onMousePress(x - frame.getX(), y - frame.getY(), button);
 							guiManager.bringForward(frame);
-							return;
+				
+							return ;
 						}
 					}
 				}
@@ -45,21 +47,24 @@ public class GuiManagerDisplayScreen extends GuiScreen {
 			if(!frame.isMinimized() && frame.getArea().contains(x, y)) {
 				frame.onMousePress(x - frame.getX(), y - frame.getY(), button);
 				guiManager.bringForward(frame);
+				
 				break;
 			} else if(frame.isMinimized()) {
 				for(Rectangle area : frame.getTheme().getUIForComponent(frame).getInteractableRegions(frame)) {
 					if(area.contains(x - frame.getX(), y - frame.getY())) {
 						frame.onMousePress(x - frame.getX(), y - frame.getY(), button);
 						guiManager.bringForward(frame);
-						return;
+				
+						return ;
 					}
 				}
 			}
 		}
+		return;
 	}
 
 	@Override
-	public void mouseReleased(int x, int y, int button) {
+	protected void mouseReleased(int x, int y, int button) {
 		super.mouseReleased(x, y, button);
 		for(Frame frame : guiManager.getFrames()) {
 			if(!frame.isVisible())

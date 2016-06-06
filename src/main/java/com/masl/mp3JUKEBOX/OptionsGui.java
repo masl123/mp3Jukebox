@@ -17,7 +17,7 @@
   */
 
 
-package com.masl.mp3JUKEBOX;
+package com.masl.mp3Jukebox;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -54,6 +55,7 @@ import org.darkstorm.minecraft.gui.listener.ButtonListener;
 import org.darkstorm.minecraft.gui.listener.SliderListener;
 import org.darkstorm.minecraft.gui.theme.Theme;
 import org.darkstorm.minecraft.gui.theme.simple.SimpleTheme;
+import org.darkstorm.minecraft.gui.theme.textured.TexturedTheme;
 
 public class OptionsGui extends AbstractGuiManager {
 	
@@ -77,10 +79,10 @@ public class OptionsGui extends AbstractGuiManager {
 		if(!setup.compareAndSet(false, true))
 			return;
 		
-		setTheme(new SimpleTheme());
+		setTheme(new TexturedTheme());
 		
-		
-		testFrame = new BasicFrame("mp3 Jukebox Mod");
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		testFrame = new CFrame("mp3 Jukebox Mod", 0, 0, sr.getScaledWidth() - (10*sr.getScaleFactor()),  sr.getScaledHeight()-(10*sr.getScaleFactor()));
 		
 		LayoutManager mgr = new GridLayoutManager(3,3);
 		testFrame.setLayoutManager(mgr);
@@ -211,6 +213,32 @@ public class OptionsGui extends AbstractGuiManager {
 		return slider.getValue();
 	}
 	
-	
+	private class CFrame extends BasicFrame{
+		Rectangle rect;
+		
+		CFrame(String s, int x, int y , int width, int height){
+			super(s);
+			
+			rect = new Rectangle(x,y,width, height);
+		}
+		
+		
+		@Override
+		public void setX(int x) {
+			if(x > rect.getX() && x < rect.getMaxX()){
+				super.setX(x);
+			}
+		}
+		@Override
+		public void setY(int y) {
+			if(y > rect.getY() && y < rect.getMaxY()){
+				super.setY(y);
+			}
+		}
+	}
 	
 }
+
+
+
+

@@ -17,7 +17,7 @@
   */
 
 
-package com.masl.mp3JUKEBOX;
+package com.masl.mp3Jukebox;
 
 import org.darkstorm.minecraft.gui.ExampleGuiManager;
 import org.darkstorm.minecraft.gui.GuiManager;

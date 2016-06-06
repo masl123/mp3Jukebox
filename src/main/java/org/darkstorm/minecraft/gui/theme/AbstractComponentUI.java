@@ -2,6 +2,8 @@ package org.darkstorm.minecraft.gui.theme;
 
 import java.awt.*;
 
+import net.minecraft.client.renderer.Tessellator;
+
 import org.darkstorm.minecraft.gui.component.Component;
 import org.darkstorm.minecraft.gui.component.Container;
 import org.lwjgl.opengl.GL11;
@@ -56,6 +58,8 @@ public abstract class AbstractComponentUI<T extends Component> implements Compon
 		Component parent = component.getParent();
 		while(parent != null) {
 			GL11.glTranslated((reverse ? -1 : 1) * parent.getX(), (reverse ? -1 : 1) * parent.getY(), 0);
+			//Tessellator.getInstance().getWorldRenderer().setTranslation((reverse ? -1 : 1) * parent.getX(), (reverse ? -1 : 1) * parent.getY(), 0);
+			
 			parent = parent.getParent();
 		}
 		GL11.glTranslated((reverse ? -1 : 1) * component.getX(), (reverse ? -1 : 1) * component.getY(), 0);

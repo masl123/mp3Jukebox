@@ -4,12 +4,17 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.*;
 
-import org.lwjgl.input.Mouse;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Mouse;
 import org.darkstorm.minecraft.gui.component.Button;
 import org.darkstorm.minecraft.gui.component.Component;
 import org.darkstorm.minecraft.gui.theme.AbstractComponentUI;
 import org.darkstorm.minecraft.gui.util.RenderUtil;
+
+import com.masl.mp3Jukebox.mp3Jukebox;
 
 public class SimpleButtonUI extends AbstractComponentUI<Button> {
 	private final SimpleTheme theme;
@@ -26,19 +31,28 @@ public class SimpleButtonUI extends AbstractComponentUI<Button> {
 	protected void renderComponent(Button button) {
 		translateComponent(button, false);
 		Rectangle area = button.getArea();
+		
+		
 		glEnable(GL_BLEND);
 		glDisable(GL_CULL_FACE);
 
-		glDisable(GL_TEXTURE_2D);
+		
 		RenderUtil.setColor(button.getBackgroundColor());
+		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		{
+			glTexCoord2d(0, 0);
 			glVertex2d(0, 0);
+			glTexCoord2d(1, 0);
 			glVertex2d(area.width, 0);
+			glTexCoord2d(1, 1);
 			glVertex2d(area.width, area.height);
+			glTexCoord2d(0, 1);
 			glVertex2d(0, area.height);
 		}
 		glEnd();
+		
+		
 		Point mouse = RenderUtil.calculateMouseLocation();
 		Component parent = button.getParent();
 		while(parent != null) {
@@ -69,6 +83,7 @@ public class SimpleButtonUI extends AbstractComponentUI<Button> {
 
 		glEnable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
+		
 		translateComponent(button, true);
 	}
 
