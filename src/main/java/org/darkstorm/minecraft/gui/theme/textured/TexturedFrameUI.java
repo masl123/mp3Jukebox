@@ -53,11 +53,11 @@ public class TexturedFrameUI extends AbstractComponentUI<Frame> {
 		glColor4f(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(bg);
 		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
-		wr.startDrawing(GL11.GL_QUADS);
-		wr.addVertexWithUV(0, area.getHeight(), 0,0, height);
-		wr.addVertexWithUV(area.getWidth(), area.getHeight(), 0,1, height);
-		wr.addVertexWithUV(area.getWidth(), 0, 0,1, 0);;
-		wr.addVertexWithUV(0, 0, 0,0, 0);
+		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		wr.pos(0, area.getHeight(), 0).tex(0, height).endVertex();
+		wr.pos(area.getWidth(), area.getHeight(), 0).tex(1, height).endVertex();
+		wr.pos(area.getWidth(), 0, 0).tex(1, 0).endVertex();;
+		wr.pos(0, 0, 0).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 		
 		
@@ -112,26 +112,26 @@ public class TexturedFrameUI extends AbstractComponentUI<Frame> {
 		glColor4f(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(tex);
 		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
-		wr.startDrawing(GL11.GL_QUADS);
+		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		
 		
 		if(!mouseover & !overlay){
-			wr.addVertexWithUV(offset - height, height + 2, 0,0, pos);
-			wr.addVertexWithUV(offset, height + 2, 0,1, pos);
-			wr.addVertexWithUV(offset, 2, 0,1, 0);;
-			wr.addVertexWithUV(offset - height, 2, 0,0, 0);	
+			wr.pos(offset - height, height + 2, 0).tex(0, pos).endVertex();
+			wr.pos(offset, height + 2, 0).tex(1, pos).endVertex();
+			wr.pos(offset, 2, 0).tex(1, 0).endVertex();;
+			wr.pos(offset - height, 2, 0).tex(0, 0).endVertex();	
 			Tessellator.getInstance().draw();
 		}else if(mouseover){
-			wr.addVertexWithUV(offset - height, height + 2, 0,0, 2 * pos);
-			wr.addVertexWithUV(offset, height + 2, 0,1, 2 * pos);
-			wr.addVertexWithUV(offset, 2, 0,1, pos);;
-			wr.addVertexWithUV(offset - height, 2, 0,0, pos);
+			wr.pos(offset - height, height + 2, 0).tex(0, 2 * pos).endVertex();
+			wr.pos(offset, height + 2, 0).tex(1, 2 * pos).endVertex();
+			wr.pos(offset, 2, 0).tex(1, pos).endVertex();;
+			wr.pos(offset - height, 2, 0).tex(0, pos).endVertex();
 			Tessellator.getInstance().draw();
 		}else if(overlay){
-			wr.addVertexWithUV(offset - height, height + 2, 0,0, 3 * pos);
-			wr.addVertexWithUV(offset, height + 2, 0,1, 3 * pos);
-			wr.addVertexWithUV(offset, 2, 0,1, 2 * pos);;
-			wr.addVertexWithUV(offset - height, 2, 0,0, 2 * pos);
-			Tessellator.getInstance().draw();
+			wr.pos(offset - height, height + 2, 0).tex(0, 3 * pos).endVertex();
+			wr.pos(offset, height + 2, 0).tex(1, 3 * pos).endVertex();
+			wr.pos(offset, 2, 0).tex(1, 2 * pos).endVertex();;
+			wr.pos(offset - height, 2, 0).tex(0, 2 * pos).endVertex();Tessellator.getInstance().draw();
 		}		
 	}
 	

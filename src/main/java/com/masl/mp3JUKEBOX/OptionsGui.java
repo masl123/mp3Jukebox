@@ -81,7 +81,7 @@ public class OptionsGui extends AbstractGuiManager {
 		
 		setTheme(new TexturedTheme());
 		
-		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
 		testFrame = new CFrame("mp3 Jukebox Mod", 0, 0, sr.getScaledWidth() - (10*sr.getScaleFactor()),  sr.getScaledHeight()-(10*sr.getScaleFactor()));
 		
 		LayoutManager mgr = new GridLayoutManager(3,3);

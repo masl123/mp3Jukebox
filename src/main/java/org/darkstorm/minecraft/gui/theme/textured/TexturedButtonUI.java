@@ -53,17 +53,12 @@ public class TexturedButtonUI extends AbstractComponentUI<Button> {
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		
-		
-		wr.startDrawing(GL11.GL_QUADS);
-		
-		
-		wr.addVertexWithUV(0, button.getHeight(), 0,0, 0.5);
-		wr.addVertexWithUV(button.getWidth(), button.getHeight(), 0,1, 0.5);
-		wr.addVertexWithUV(button.getWidth(), 0, 0,1, 0);;
-		wr.addVertexWithUV(0, 0, 0, 0, 0);
-		
-		
+		wr.pos(0, button.getHeight(), 0).tex(0, 0.5).endVertex();
+		wr.pos(button.getWidth(), button.getHeight(), 0).tex(1, 0.5).endVertex();
+		wr.pos(button.getWidth(), 0, 0).tex(1, 0).endVertex();;
+		wr.pos(0, 0, 0).tex(0, 0).endVertex();
 		Tessellator.getInstance().draw();
 		
 		
@@ -80,16 +75,11 @@ public class TexturedButtonUI extends AbstractComponentUI<Button> {
 			//Draw Mouse on
 			glColor4f(1, 1, 1, 1);
 		
-			wr.startDrawing(GL11.GL_QUADS);
-			
-			
-			wr.addVertexWithUV(0, button.getHeight(), 0,0, 1);
-			wr.addVertexWithUV(button.getWidth(), button.getHeight(), 0,1, 1);
-			wr.addVertexWithUV(button.getWidth(), 0, 0,1, 0.5);
-			wr.addVertexWithUV(0, 0, 0,0, 0.5);
-			
-			
-			
+			wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			wr.pos(0, button.getHeight(), 0).tex(0, 1).endVertex();
+			wr.pos(button.getWidth(), button.getHeight(), 0).tex(1, 1).endVertex();
+			wr.pos(button.getWidth(), 0, 0).tex(1, 0.5).endVertex();;
+			wr.pos(0, 0, 0).tex(0, 0.5).endVertex();
 			Tessellator.getInstance().draw();
 		}
 		
