@@ -1,19 +1,16 @@
 [
-{
-  "modid": "mp3Jukebox",
-  "name": "mp3 Jukebox Mod",
-  "description": "a Mod that enables you to play mp3 Files. 
-
-
-",
-  "version": "2.2.2",
-  "mcversion": "1.8.9",
-  "url": "goo.gl/yWWXOm",
-  "updateUrl": "",
-  "authorList": ["masll"],
-  "credits": "masll (Mod), DarkStorm (Minecraft-GUI-API)",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+    {
+      "modid": "mp3Jukebox",
+      "name": "mp3 Jukebox Mod",
+      "description": "a Mod that enables you to play mp3 Files.",
+      "version": "2.3.2",
+      "mcversion": "1.9.0",
+      "url": "goo.gl/yWWXOm",
+      "updateUrl": "",
+      "authorList": ["masll"],
+      "credits": "masll (Mod), DarkStorm (Minecraft-GUI-API)",
+      "logoFile": "",
+      "screenshots": [],
+      "dependencies": []
+    }
 ]

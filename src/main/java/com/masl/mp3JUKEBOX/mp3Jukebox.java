@@ -35,7 +35,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundEventAccessorComposite;
+
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -58,10 +58,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
-@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.2.2")
+@Mod(modid="mp3Jukebox", name="mp3Jukebox", version="2.3.2")
 public class mp3Jukebox {
 
-		public static Logger logger = LogManager.getLogger();
+		public static Logger logger = LogManager.getLogger("mp3Jukebox");
 		public static String MODID = "mp3Jukebox";
 		
 		public  List<KeyBinding> keyBindings;

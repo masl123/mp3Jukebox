@@ -76,7 +76,7 @@ public class GUIHandler implements IGuiHandler {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onClickMainMenuButton(ActionPerformedEvent event){
-		if(event.button.id == 1000){
+		if(event.getButton().id == 1000){
 			  Minecraft.getMinecraft().displayGuiScreen(mp3Jukebox.instance.guiHandlerInstance.screen); 
 		}
 	}

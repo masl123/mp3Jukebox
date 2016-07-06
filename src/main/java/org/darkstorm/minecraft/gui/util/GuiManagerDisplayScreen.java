@@ -6,7 +6,6 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 
 import org.darkstorm.minecraft.gui.GuiManager;
 import org.darkstorm.minecraft.gui.component.*;

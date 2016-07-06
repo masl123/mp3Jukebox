@@ -8,7 +8,7 @@ import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import org.lwjgl.input.Mouse;
@@ -59,7 +59,7 @@ public static void drawTexturedModalRect(int par1, int par2, int par3, int par4,
 		float var7 = 0.00390625F;
 		float var8 = 0.00390625F;
 		Tessellator var9 = Tessellator.getInstance();
-		WorldRenderer var10 = var9.getWorldRenderer();
+		VertexBuffer var10 = var9.getBuffer();
 		var10.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		var10.pos((par1 + 0), (par2 + par6), 0).tex( ((par3 + 0) * var7), ((par4 + par6) * var8)).endVertex();
 		var10.pos((par1 + par5), (par2 + par6), 0).tex( ((par3 + par5) * var7),  ((par4 + par6) * var8)).endVertex();

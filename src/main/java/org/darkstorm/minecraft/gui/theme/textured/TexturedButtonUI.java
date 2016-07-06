@@ -7,7 +7,7 @@ import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -52,7 +52,7 @@ public class TexturedButtonUI extends AbstractComponentUI<Button> {
 		
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		WorldRenderer wr = Tessellator.getInstance().getWorldRenderer();
+		VertexBuffer  wr = Tessellator.getInstance().getBuffer();
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		
 		wr.pos(0, button.getHeight(), 0).tex(0, 0.5).endVertex();

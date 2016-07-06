@@ -30,17 +30,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 
-
-
-
-
-
-
-
-
-
-import com.masl.Mp4Codecc;
-
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
@@ -49,8 +38,6 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.client.audio.MusicTicker.MusicType;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundCategory;
-import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundList;
 import net.minecraft.client.audio.SoundManager;
@@ -90,17 +77,20 @@ public class SoundLoader {
 		File musicfile = null;
 
 		musicfile = new File(Minecraft.getMinecraft().mcDataDir, "music");
-		System.out.println(musicfile);
+		mp3Jukebox.logger.log(Level.INFO,"Music-Folder at: "+ musicfile.getAbsolutePath());
 		musicfile.mkdirs();
 
 		mp3Player.resetMusicList();
-
+		
+		
+		int count = 0;
 		for (File m : musicfile.listFiles()) {
 			if (FilenameUtils.getExtension(m.getAbsolutePath()).equals("ogg") || FilenameUtils.getExtension(m.getAbsolutePath()).equals("mp3")) {
-				mp3Player.addMusicTitle(m);
-				mp3Jukebox.logger.log(Level.INFO,"FOUND SONG: " + m.getAbsolutePath());
+				mp3Player.addMusicTitle(m);	
+				count++;
 			}
 		}
+		mp3Jukebox.logger.log(Level.INFO,"ADDED " +count+ " Songs to Playlist.");
 	}
 	  
 	@SubscribeEvent

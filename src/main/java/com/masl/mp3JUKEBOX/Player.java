@@ -25,17 +25,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.Level;
+
 import paulscode.sound.IStreamListener;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -71,7 +73,8 @@ public class Player {
 						
 						
 						File f = music.get(titleindex);
-						System.out.println(currUUID+" "+f);
+						
+						mp3Jukebox.logger.log(Level.DEBUG, currUUID+" "+f);
 					
 						sndSystem.backgroundMusic(currUUID, f.toURI().toURL(), f.getName(), false);
 					}
@@ -94,13 +97,14 @@ public class Player {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void PlaySoundEvent(PlaySoundEvent event) {
-		if (event.category == SoundCategory.MUSIC && soundPlaying) {
-			System.out.println("Stoped Streamed Sound:  " + event.category);
-			event.result = null;
-			event.setResult(Result.DENY);
-		} else if (event.category == SoundCategory.MUSIC) {
-
-			currentMusic = event.sound;
+		
+		if (event.getSound().getCategory() == SoundCategory.MUSIC && soundPlaying) {
+			
+			mp3Jukebox.logger.log(Level.DEBUG, "Stoped Streamed Sound:  " + event.getSound().getCategory());
+			
+			event.setResultSound(null);
+		} else if (event.getSound().getCategory() == SoundCategory.MUSIC) {
+			currentMusic = event.getSound();
 		}
 	}
 
@@ -273,15 +277,15 @@ public class Player {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void GUIMainMenuOpened(InitGuiEvent event) {
-		if (event.gui instanceof GuiMainMenu) {
-			event.buttonList.add(new GuiButton(1000, event.gui.width / 2 - 100, event.gui.height - 30, "mp3 Jukebox"));
+		if (event.getGui() instanceof GuiMainMenu) {
+			event.getButtonList().add(new GuiButton(1000, event.getGui().width / 2 - 100, event.getGui().height - 30, "mp3 Jukebox"));
 		} 
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void GUIConfigChanged(ActionPerformedEvent event) {
-		if (event.gui instanceof GuiOptions) {
+		if (event.getGui() instanceof GuiOptions) {
 			synchronized (Minecraft.getMinecraft().getSoundHandler()) {
 				getsndSystem();
 				stopSound();
